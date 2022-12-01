@@ -1,28 +1,56 @@
-use itertools::Itertools;
-
-fn to_u32(x: &str) -> u32 {
-    x.parse::<u32>().unwrap()
-}
-
-// identify value increases across iterator by using a sliding window.
-fn count_increases(it: impl Iterator<Item = u32>) -> u32 {
-    let win = it.tuple_windows();
-    win.fold(0, |acc, (a, b)| if b > a { acc + 1 } else { acc })
-}
+use itertools::enumerate;
 
 pub fn part_one(input: &str) -> u32 {
-    let it = input.lines().map(to_u32);
-    count_increases(it)
+    let it = input.lines();
+
+    let mut max = 0;
+    let mut current = 0;
+
+    for el in it {
+        if el.is_empty() {
+            if current > max {
+                max = current;
+            }
+            current = 0;
+            continue;
+        }
+        current += el.parse::<u32>().unwrap();
+    }
+
+    max
 }
 
 pub fn part_two(input: &str) -> u32 {
-    let it = input
-        .lines()
-        .map(to_u32)
-        .tuple_windows()
-        .map(|(a, b, c)| a + b + c);
+    let it = input.lines();
+    let num_lines = input.lines().count();
 
-    count_increases(it)
+    let mut top_three: Vec<u32> = vec![0, 0, 0];
+    let mut current: u32 = 0;
+
+    for (i, el) in enumerate(it) {
+        if i == num_lines - 1 {
+            current += el.parse::<u32>().unwrap();
+            if current > top_three[2] {
+                top_three.pop();
+                top_three.push(current);
+                continue;
+            }
+        }
+
+        if el.is_empty() {
+            if current > top_three[2] {
+                top_three.pop();
+                top_three.push(current);
+                top_three.sort();
+                top_three.reverse();
+            }
+            current = 0;
+            continue;
+        }
+        current += el.parse::<u32>().unwrap();
+    }
+
+    top_three.iter().sum()
 }
 
 #[cfg(test)]
@@ -33,13 +61,13 @@ mod tests {
     fn test_part_one() {
         use aoc::read_file;
         let input = read_file("examples", 1);
-        assert_eq!(part_one(&input), 7);
+        assert_eq!(part_one(&input), 24000);
     }
 
     #[test]
     fn test_part_two() {
         use aoc::read_file;
         let input = read_file("examples", 1);
-        assert_eq!(part_two(&input), 5);
+        assert_eq!(part_two(&input), 45000);
     }
 }
