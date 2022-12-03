@@ -38,6 +38,7 @@ pub fn part_two(input: &str) -> u32 {
         .sum()
 }
 
+// Used ASCII codes to get prio https://www.ascii-code.com/
 fn get_priority(element: char) -> u32 {
     if element.is_lowercase() {
         return element as u32 - 96;
