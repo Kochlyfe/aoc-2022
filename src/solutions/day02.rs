@@ -7,7 +7,6 @@ pub fn part_one(input: &str) -> u32 {
 
     input
         .lines()
-        .into_iter()
         .map(|game| {
             let hands: Vec<&str> = game.split(" ").collect();
 

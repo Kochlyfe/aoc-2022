@@ -1,5 +1,3 @@
-use std::vec;
-
 pub fn part_one(input: &str) -> u32 {
     input
         .lines()
@@ -21,18 +19,10 @@ pub fn part_one(input: &str) -> u32 {
 }
 
 pub fn part_two(input: &str) -> u32 {
-    let len = input.lines().count();
-    let lines: Vec<&str> = input.lines().collect();
-    let mut groups: Vec<Vec<&str>> = vec![];
-    let mut index = 0;
-
-    while index < len {
-        let group: Vec<&str> = lines[index..index + 3].to_vec();
-        groups.push(group);
-        index += 3;
-    }
-
-    groups.into_iter()
+    input
+        .lines()
+        .collect::<Vec<_>>()
+        .chunks(3)
         .map(|group| {
             let first_elf = group.get(0).unwrap();
 
