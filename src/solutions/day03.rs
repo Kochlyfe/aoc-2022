@@ -41,9 +41,9 @@ pub fn part_two(input: &str) -> u32 {
 fn get_priority(element: char) -> u32 {
     if element.is_lowercase() {
         return element as u32 - 96;
-    } else {
-        return element as u32 - 64 + 26;
-    };
+    }
+
+    return element as u32 - 64 + 26;
 }
 
 #[cfg(test)]
