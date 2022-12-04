@@ -3,18 +3,14 @@ pub fn part_one(input: &str) -> u32 {
         .lines()
         .map(|line| {
             let (min1, max1, min2, max2) = parse_line_to_elfs_min_max(line);
+            let overlaps = (min1 >= min2 && max1 <= max2) || (min2 >= min1 && max2 <= max1);
 
-            if min1 >= min2 && max1 <= max2 {
-                return 1;
-            }
-
-            if min2 >= min1 && max2 <= max1 {
+            if overlaps {
                 return 1;
             }
 
             0
         })
-        .into_iter()
         .sum()
 }
 
@@ -23,18 +19,14 @@ pub fn part_two(input: &str) -> u32 {
         .lines()
         .map(|line| {
             let (min1, max1, min2, max2) = parse_line_to_elfs_min_max(line);
+            let overlaps = (max1 >= min2 && max1 <= max2) || (max2 >= min1 && max2 <= max1);
 
-            if max1 >= min2 && max1 <= max2 {
-                return 1;
-            }
-
-            if max2 >= min1 && max2 <= max1 {
+            if overlaps {
                 return 1;
             }
 
             0
         })
-        .into_iter()
         .sum()
 }
 
