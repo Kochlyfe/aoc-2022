@@ -1,3 +1,19 @@
+use std::char;
+
+pub trait Priority {
+    fn priority(&self) -> u32;
+}
+
+impl Priority for char {
+    fn priority(&self) -> u32 {
+        if self.is_lowercase() {
+            return *self as u32 - 96;
+        }
+
+        return *self as u32 - 64 + 26;
+    }
+}
+
 pub fn part_one(input: &str) -> u32 {
     input
         .lines()
@@ -28,7 +44,7 @@ pub fn part_two(input: &str) -> u32 {
 
             for el in first_elf.chars() {
                 if group.get(1).unwrap().contains(el) && group.get(2).unwrap().contains(el) {
-                    return get_priority(el);
+                    return el.priority();
                 }
             }
             // not used, just fallback for type safety
