@@ -65,12 +65,6 @@ pub fn part_two(input: &str) -> String {
         let f = *cleaned.get(1).unwrap() - 1;
         let t = *cleaned.get(2).unwrap() - 1;
 
-        // println!("{},{},{}", m, f, t);
-        // let mut items = stacks.get(f).unwrap().iter().rev().take(m).rev().collect::<Vec<_>>();
-        // stacks.get(t).unwrap().push(items);
-
-        // println!("{:?}", rev_items);
-
         let mut counter = 0;
         let mut items = vec![];
         while counter < m {
