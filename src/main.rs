@@ -4,7 +4,6 @@ use std::env;
 use std::fmt::Display;
 use std::time::Instant;
 
-// mod helpers;
 mod solutions;
 
 static ANSI_ITALIC: &str = "\x1b[3m";
@@ -49,7 +48,7 @@ fn main() {
         3 => solve_day!(day03, &input),
         4 => solve_day!(day04, &input),
         5 => solve_day!(day05, &input),
-        // 6 => solve_day!(day06, &input),
+        6 => solve_day!(day06, &input),
         // 7 => solve_day!(day07, &input),
         // 8 => solve_day!(day08, &input),
         // 9 => solve_day!(day09, &input),
