@@ -1,4 +1,11 @@
-pub fn part_one(input: &str) -> usize {
+// My own scrappy code. Runs in:
+//🎄 Part 1 🎄
+// 1343 (elapsed: 1.73ms)
+// 🎄 Part 2 🎄
+// 2193 (elapsed: 3.15ms)
+// so not too bad, but quite far from optimal
+
+pub fn part_one_old(input: &str) -> usize {
 
     let mut counter = 0;
     while counter < input.len() {
@@ -13,7 +20,7 @@ pub fn part_one(input: &str) -> usize {
     0
 }
 
-pub fn part_two(input: &str) -> usize {
+pub fn part_two_old(input: &str) -> usize {
     let mut counter = 0;
     while counter < input.len() {
         let current = &input[counter..counter + 14];
@@ -36,6 +43,30 @@ fn unique_chars(str: &str) -> bool {
     }
 
     return true;
+}
+
+pub fn part_one(input: &str) -> usize {
+    return find_unique_sequence(input.as_bytes(), 4);
+}
+
+pub fn part_two(input: &str) -> usize {
+    return find_unique_sequence(input.as_bytes(), 14);
+}
+
+// Completely stolen from a genius from Reddit.
+// 🎄 Part 1 🎄
+// 1343 (elapsed: 443.17µs)
+// 🎄 Part 2 🎄
+// 2193 (elapsed: 992.58µs)
+fn find_unique_sequence(buffer: &[u8], length: usize) -> usize {
+    buffer.windows(length).position(all_bytes_unique).unwrap() + length
+}
+
+fn all_bytes_unique(sequence: &[u8]) -> bool {
+    sequence
+        .iter()
+        .enumerate()
+        .all(|(i, byte)| !sequence[i + 1..].contains(byte))
 }
 
 #[cfg(test)]
