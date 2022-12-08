@@ -46,11 +46,11 @@ fn unique_chars(str: &str) -> bool {
 }
 
 pub fn part_one(input: &str) -> usize {
-    return find_unique_sequence(input.as_bytes(), 4);
+    find_unique_sequence(input.as_bytes(), 4)
 }
 
 pub fn part_two(input: &str) -> usize {
-    return find_unique_sequence(input.as_bytes(), 14);
+    find_unique_sequence(input.as_bytes(), 14)
 }
 
 // Completely stolen from a genius from Reddit.
