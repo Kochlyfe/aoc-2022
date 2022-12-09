@@ -50,7 +50,7 @@ fn main() {
         5 => solve_day!(day05, &input),
         6 => solve_day!(day06, &input),
         7 => solve_day!(day07, &input),
-        // 8 => solve_day!(day08, &input),
+        8 => solve_day!(day08, &input),
         // 9 => solve_day!(day09, &input),
         // 10 => solve_day!(day10, &input),
         // 11 => solve_day!(day11, &input),
