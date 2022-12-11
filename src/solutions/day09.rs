@@ -1,95 +1,49 @@
 use std::collections::HashSet;
 
-#[derive(Debug)]
-struct Position {
-    x: i16,
-    y: i16,
+pub fn part_one(input: &str) -> usize {
+    calc_moves(input, 2)
 }
 
-impl Position {
-    fn update_position_from_direction(&mut self, direction: char) -> &mut Self {
-        match direction {
-            'U' => {
-                self.y += 1;
-            }
-            'D' => {
-                self.y -= 1;
-            }
-            'R' => {
-                self.x += 1;
-            }
-            'L' => {
-                self.x -= 1;
-            }
-            _ => {}
-        };
-
-        self
-    }
-
-    fn move_tail(&mut self, head: &mut Position) -> &mut Self {
-        let vertical_diff = head.y - self.y;
-        let horizontal_diff = head.x - self.x;
-        // Diagonal
-        if (vertical_diff.abs() + horizontal_diff.abs()) > 2 {
-            if horizontal_diff > 0 {
-                self.x += 1;
-            } else {
-                self.x -= 1;
-            }
-            if vertical_diff > 0 {
-                self.y += 1;
-            } else {
-                self.y -= 1;
-            }
-
-            return self;
-        }
-        // horizontal
-        if horizontal_diff == 2 {
-            self.x += 1;
-        } else if horizontal_diff == -2 {
-            self.x -= 1; 
-        }
-        //
-        // vertical
-        if vertical_diff == 2 {
-            self.y += 1;
-        } else if vertical_diff == -2 {
-            self.y -= 1;
-        }
-
-        self
-    }
-
-    fn get_position(&mut self) -> (i16, i16) {
-        (self.x, self.y)
-    }
+pub fn part_two(input: &str) -> usize {
+    calc_moves(input, 10)
 }
 
-pub fn part_one(input: &str) -> u32 {
-    let mut position_set: HashSet<(i16,i16)> = HashSet::new();
-    let mut head = Position { x: 0, y: 0  };
-    let mut tail = Position { x: 0, y: 0 };
+fn calc_moves(input: &str, knots: usize) -> usize {
+    let mut set = HashSet::new();
+    let mut rope: Vec<(i32, i32)> = vec![(0, 0); knots];
 
     for cmd in input.lines() {
-        let direction = cmd.chars().nth(0).unwrap();
-        let mut amount = cmd.chars().nth(2).unwrap().to_digit(10).unwrap();
+        let (x, y, n) = match cmd.split_at(2) {
+            ("R ", n) => (1, 0, n),
+            ("L ", n) => (-1, 0, n),
+            ("U ", n) => (0, 1, n),
+            ("D ", n) => (0, -1, n),
+            _ => unreachable!(),
+        };
 
-        while amount > 0 {
-            let updated_x = head.update_position_from_direction(direction);
-            let updated_y = tail.move_tail(updated_x);
-            position_set.insert(updated_y.get_position());
+        for _ in 0..n.parse::<usize>().unwrap() {
+            rope[0].0 += x;
+            rope[0].1 += y;
 
-            amount -= 1;
+            for i in 1..rope.len() {
+                let (head, tail) = (rope[i - 1], rope[i]);
+                let (dx, dy) = (tail.0 - head.0, tail.1 - head.1);
+                let (dxl, dyl) = (dx.clamp(-1, 1), dy.clamp(-1, 1));
+
+                rope[i] = match (dx.abs() > 1, dy.abs() > 1) {
+                    (true, true) => (head.0 + dxl, head.1 + dyl),
+                    (true, false) => (head.0 + dxl, head.1),
+                    (false, true) => (head.0, head.1 + dyl),
+                    _ => tail,
+                };
+
+                let last = rope.last().unwrap().clone();
+                set.insert(last);
+            }
         }
     }
 
-    position_set.len() as u32
-}
-
-pub fn part_two(input: &str) -> u32 {
-    10
+    set.iter().count()
 }
 
 #[cfg(test)]
@@ -103,10 +57,30 @@ mod tests {
         assert_eq!(part_one(&input), 13);
     }
 
-    // #[test]
-    // fn test_part_two() {
-    //     use aoc::read_file;
-    //     let input = read_file("examples", 9);
-    //     assert_eq!(part_two(&input), 8);
-    // }
+    #[test]
+    fn test_part_one_input() {
+        use aoc::read_file;
+        let input = read_file("inputs", 9);
+        assert_eq!(part_one(&input), 6284);
+    }
+
+    #[test]
+    fn test_part_two() {
+        use aoc::read_file;
+        let input = read_file("examples", 9);
+        assert_eq!(part_two(&input), 1);
+    }
+
+    #[test]
+    fn test_part_two_extra() {
+        let input = String::from("R 5
+U 8
+L 8
+D 3
+R 17
+D 10
+L 25
+U 20");
+        assert_eq!(part_two(&input), 36);
+    }
 }
