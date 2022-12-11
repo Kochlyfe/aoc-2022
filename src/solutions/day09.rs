@@ -9,9 +9,11 @@ pub fn part_one(input: &str) -> u32 {
     // add T position to set
     
     // return length/count of set elements
+    10
 }
 
 pub fn part_two(input: &str) -> u32 {
+    10
 }
 
 #[cfg(test)]
