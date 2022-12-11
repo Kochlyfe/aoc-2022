@@ -1,5 +1,3 @@
-use itertools::Itertools;
-
 pub fn part_one(input: &str) -> i32 {
     let mut lines = input.lines();
 
