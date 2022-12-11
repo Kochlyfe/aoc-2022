@@ -5,45 +5,45 @@
 // 2193 (elapsed: 3.15ms)
 // so not too bad, but quite far from optimal
 
-pub fn part_one_old(input: &str) -> usize {
+// pub fn part_one_old(input: &str) -> usize {
 
-    let mut counter = 0;
-    while counter < input.len() {
-        let current = &input[counter..counter + 4];
-        if unique_chars(current) {
-            return counter + 4;
-        }
+//     let mut counter = 0;
+//     while counter < input.len() {
+//         let current = &input[counter..counter + 4];
+//         if unique_chars(current) {
+//             return counter + 4;
+//         }
 
-        counter += 1;
-    }
+//         counter += 1;
+//     }
 
-    0
-}
+//     0
+// }
 
-pub fn part_two_old(input: &str) -> usize {
-    let mut counter = 0;
-    while counter < input.len() {
-        let current = &input[counter..counter + 14];
-        if unique_chars(current) {
-            return counter + 14;
-        }
+// pub fn part_two_old(input: &str) -> usize {
+//     let mut counter = 0;
+//     while counter < input.len() {
+//         let current = &input[counter..counter + 14];
+//         if unique_chars(current) {
+//             return counter + 14;
+//         }
 
-        counter += 1;
-    }
+//         counter += 1;
+//     }
 
-    0
-}
+//     0
+// }
 
-fn unique_chars(str: &str) -> bool {
-    for c in str.chars() {
-        let matches: Vec<_> = str.rmatches(c).collect();
-        if matches.len() > 1 {
-            return false;
-        }
-    }
+// fn unique_chars(str: &str) -> bool {
+//     for c in str.chars() {
+//         let matches: Vec<_> = str.rmatches(c).collect();
+//         if matches.len() > 1 {
+//             return false;
+//         }
+//     }
 
-    return true;
-}
+//     return true;
+// }
 
 pub fn part_one(input: &str) -> usize {
     find_unique_sequence(input.as_bytes(), 4)

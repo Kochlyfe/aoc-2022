@@ -2,7 +2,7 @@ use std::collections::HashMap;
 
 #[derive(Debug)]
 struct Directory {
-    direct_size: u32,
+    size: u32,
     subfolders: Vec<String>,
 }
 
@@ -54,10 +54,10 @@ fn recurse(key: &str, structure: &HashMap<&str, Directory>, visited: &mut Vec<St
             .map(|s| recurse(&s, structure, visited))
             .sum();
 
-        return lookup.direct_size + indirect_size;
+        return lookup.size + indirect_size;
     }
 
-    return lookup.direct_size;
+    return lookup.size;
 }
 
 fn parse_file_structure(input: &str) -> HashMap<&str, Directory> {
@@ -86,6 +86,7 @@ fn parse_file_structure(input: &str) -> HashMap<&str, Directory> {
             ls_mode = true;
             continue;
         }
+
         if i == input.lines().count() - 1 && ls_mode {
             if !line.contains("dir") && !line.contains("$") {
                 files_in_current_dir.push(line);
@@ -94,24 +95,12 @@ fn parse_file_structure(input: &str) -> HashMap<&str, Directory> {
             match directories.get(curr_dir) {
                 Some(_) => {}
                 None => {
-                    let mut subfolders: Vec<String> = vec![];
-                    let mut direct_size: u32 = 0;
-                    for f in &mut files_in_current_dir {
-                        if f.contains("dir") {
-                            let spl: Vec<&str> = f.split(" ").collect();
-                            let dir_name = spl.last().unwrap();
-                            subfolders.push(dir_name.to_string());
-                        } else {
-                            let index = f.find(" ").unwrap();
-                            let int = &f[..index].parse::<u32>().unwrap();
-                            direct_size += int;
-                        }
-                    }
+                    let (size, subfolders) = parse_directory_contents(&files_in_current_dir);
 
                     directories.insert(
                         curr_dir,
                         Directory {
-                            direct_size: direct_size,
+                            size,
                             subfolders,
                         },
                     );
@@ -123,28 +112,18 @@ fn parse_file_structure(input: &str) -> HashMap<&str, Directory> {
 
         if line.contains("$ cd") {
             if ls_mode {
+                // Add parent folders name to the subfolder name
                 let curr_dir = *path.last().unwrap();
+
                 match directories.get(curr_dir) {
                     Some(_) => {}
                     None => {
-                        let mut subfolders: Vec<String> = vec![];
-                        let mut direct_size: u32 = 0;
-                        for f in &mut files_in_current_dir {
-                            if f.contains("dir") {
-                                let spl: Vec<&str> = f.split(" ").collect();
-                                let dir_name = spl.last().unwrap();
-                                subfolders.push(dir_name.to_string());
-                            } else {
-                                let index = f.find(" ").unwrap();
-                                let int = &f[..index].parse::<u32>().unwrap();
-                                direct_size += int;
-                            }
-                        }
+                        let (size, subfolders) = parse_directory_contents(&files_in_current_dir);
 
                         directories.insert(
                             curr_dir,
                             Directory {
-                                direct_size,
+                                size,
                                 subfolders,
                             },
                         );
@@ -171,6 +150,26 @@ fn parse_file_structure(input: &str) -> HashMap<&str, Directory> {
     }
 
     directories
+}
+
+fn parse_directory_contents(files: &Vec<&str>) -> (u32, Vec<String>) {
+    let mut direct_size: u32 = 0;
+    let mut subfolders: Vec<String> = vec![];
+
+    for f in files {
+        if f.contains("dir") {
+            let spl: Vec<&str> = f.split(" ").collect();
+            let dir_name = spl.last().unwrap();
+            // Add current_dir name to dir_name string
+            subfolders.push(dir_name.to_string());
+        } else {
+            let index = f.find(" ").unwrap();
+            let int = &f[..index].parse::<u32>().unwrap();
+            direct_size += int;
+        }
+    }
+
+    (direct_size, subfolders)
 }
 
 #[cfg(test)]
