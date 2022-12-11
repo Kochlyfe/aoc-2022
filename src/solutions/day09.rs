@@ -31,7 +31,7 @@ impl Position {
         let vertical_diff = head.y - self.y;
         let horizontal_diff = head.x - self.x;
         // Diagonal
-        if vertical_diff.abs() + horizontal_diff.abs() > 2 {
+        if (vertical_diff.abs() + horizontal_diff.abs()) > 2 {
             if horizontal_diff > 0 {
                 self.x += 1;
             } else {
@@ -46,16 +46,16 @@ impl Position {
             return self;
         }
         // horizontal
-        if horizontal_diff > 1 {
+        if horizontal_diff == 2 {
             self.x += 1;
-        } else if horizontal_diff < -1 {
+        } else if horizontal_diff == -2 {
             self.x -= 1; 
         }
         //
         // vertical
-        if vertical_diff > 1 {
+        if vertical_diff == 2 {
             self.y += 1;
-        } else if vertical_diff < -1 {
+        } else if vertical_diff == -2 {
             self.y -= 1;
         }
 
@@ -69,7 +69,7 @@ impl Position {
 
 pub fn part_one(input: &str) -> u32 {
     let mut position_set: HashSet<(i16,i16)> = HashSet::new();
-    let mut head = Position { x: 0, y: 0 };
+    let mut head = Position { x: 0, y: 0  };
     let mut tail = Position { x: 0, y: 0 };
 
     for cmd in input.lines() {
@@ -81,7 +81,6 @@ pub fn part_one(input: &str) -> u32 {
             let updated_y = tail.move_tail(updated_x);
             position_set.insert(updated_y.get_position());
 
-            println!("x: {:?}, y: {:?}", updated_x, updated_y);
             amount -= 1;
         }
     }
